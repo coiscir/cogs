@@ -7,7 +7,7 @@
  *  Cogs is released and distributable under the terms of the MIT License.
 ***~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~**/
 
-$C = COG = new (function () {
+$C = Cogs = new (function () {
   var $C = this;
   $C.Version = '<%= COGS_VERSION %>';
 })();

@@ -1,0 +1,65 @@
+<html>
+<head>
+  <title>Cogs - Tests</title>
+  <style type="text/css">
+    pre {
+      font-size: 8pt;
+    }
+    
+    .pass {
+      color: #0a0;
+    }
+    .fail {
+      color: #f00;
+    }
+  </style>
+</head>
+<body>
+
+<script type="text/javascript" src="../lib/cogs.js"></script>
+<script type="text/javascript">
+var pass = '<span class="pass">PASS</span>';
+var fail = '<span class="fail">FAIL</span>';
+
+var passfail = function (expect, trial, comment) {
+  var result;
+  try {
+    result = trial();
+  } catch (e) {
+    result = e;
+    comment += ' {Error: ' + e.message + '}';
+  }
+  var passed = (result === expect || Cogs.is_a(result, expect));
+  return (passed ? pass : fail) + ': ' + comment + (passed ? '' : ' {' + result + ' (' + Cogs.type(result) + ')}');
+};
+</script>
+<script type="text/javascript">
+function println() {
+  for (var i = 0; i < arguments.length; i += 1)
+    document.write(arguments[i]);
+  document.write('&nbsp;<br />');
+}
+</script>
+<script type="text/javascript">
+document.write('<pre>');
+
+var timeStart = new Date().getTime();
+
+println('################################');
+println();
+println('====  Cogs');
+println();
+println(passfail(true, function(){ return !!(Cogs && $C); }, 'Build'));
+println();
+println();
+println('################################');
+println();
+println();
+println('Runtime: ', new Date().getTime() - timeStart, 'ms');
+println();
+
+document.write('</pre>');
+</script>
+
+</body>
+</html>
