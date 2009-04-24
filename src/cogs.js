@@ -10,4 +10,6 @@
 $C = Cogs = new (function () {
   var $C = this;
   $C.Version = '<%= COGS_VERSION %>';
+  
+<%=inc(2, opt(true, false), 'type.js')%>
 })();
