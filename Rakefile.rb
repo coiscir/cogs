@@ -3,8 +3,8 @@ Dir.chdir(File.expand_path(File.dirname(__FILE__)))
 require 'rake'
 require 'build/builder'
 
-CGOS_BUILDING = Time.now.utc.freeze
-COGS_VERSION  = CGOS_BUILDING.strftime('%Y.%m%d')
+CGOS_BUILD = Time.now.utc.freeze
+COGS_VERSION = CGOS_BUILD.strftime('%Y.%m%d')
 
 LIB = File.join('lib', 'cogs.js')
 MIN = File.join('lib', 'cogs.min.js')

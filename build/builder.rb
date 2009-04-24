@@ -1,5 +1,5 @@
 require 'erb'
-require 'jsmin' # RubyGems
+require 'jsmin'
 
 module Builder
   module Reader

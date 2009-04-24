@@ -1,6 +1,6 @@
 /**~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  *  Cogs JavaScript Library, version <%= COGS_VERSION %>
- *  (c) 2008-<%= CGOS_BUILDING.year %> Jonathan Lonowski
+ *  (c) 2008-<%= CGOS_BUILD.year %> Jonathan Lonowski
  *
  *  http://github.com/coiscir/cogs/
  *
