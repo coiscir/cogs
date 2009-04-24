@@ -14,6 +14,16 @@ Cogs is intended for the following platforms:
 * Apple Safari 2.0 and higher
 * Opera 9.25 and higher
 
+## Using Cogs
+
+To use Cogs, download and copy either `cogs.js` or `cogs.min.js` to a directory
+on your website (e.g. `/scripts/`) and include it with:
+
+>     <script type="text/javascript" src="/scripts/cogs.js"></script>
+
+When building from a source tree, these files are created in the `/lib/`
+directory.
+
 ### Building Cogs
 
 To build Cogs, you'll need to have the following:
