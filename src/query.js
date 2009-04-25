@@ -6,7 +6,7 @@
   
   $C.query = function (search, query) {
     if (!$C.is_a(search, String))
-      throw new Error('Search must be a String.');
+      throw new Error('Search is missing or not a String.');
     
     query = $C.is_a(query, String) ? query : window.location.search;
     var pairs = query.replace(/^\?/, '').replace(/\+/g, '%20').split(/\&/);
