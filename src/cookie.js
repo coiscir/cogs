@@ -24,14 +24,20 @@
     
     var ret;
     if (options.duration < 0) {
+      ret = search(name);
+      if (ret === undefined)
+        throw new Error('Cannot expire an unwritten Cookie.');
       ret = !write(name, '', options);
-      if (ret === false) throw new Error('Cookie could not be expired.');
+      if (ret === false)
+        throw new Error('Cookie could not be expired.');
     } else if ($C.is_a(value, String)) {
       ret = write(name, value, options);
-      if (ret === false) throw new Error('Cookie could not be written.');
+      if (ret === false)
+        throw new Error('Cookie could not be written.');
     } else {
       ret = search(name);
-      if (ret === undefined) throw new Error('Cookie could not be read.');
+      if (ret === undefined)
+        throw new Error('Cookie could not be read.');
     }
     return ret;
   };
