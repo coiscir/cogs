@@ -27,6 +27,8 @@ var passfail = function (expect, trial, comment) {
     result = trial();
   } catch (e) {
     result = e;
+    if (expect === Error)
+      comment += ' {Error: ' + e.message + '}';
   }
   var passed = (result === expect || Cogs.is_a(result, expect));
   return (passed ? pass : fail) + ': ' + comment + (passed ? '' : ' {' + result + ' (' + Cogs.type(result) + ')}');
@@ -44,13 +46,12 @@ document.write('<pre>');
 
 var timeStart = new Date().getTime();
 
-println('################################');
 println();
 println('====  Cogs');
 println();
 println(passfail(true, function(){ return !!(Cogs && $C); }, 'Build'));
 println();
-println('################################');
+println();
 println();
 println('====  Type');
 println();
@@ -76,7 +77,7 @@ println(passfail(true,  function(){ return Cogs.is_a(true, Boolean); },         
 println(passfail(true,  function(){ return Cogs.is_a(0, 'number'); },             'is_a: Number  primitive vs. type'));
 println(passfail(true,  function(){ return Cogs.is_a(new String(), 'string'); },  'is_a: String  object    vs. type'));
 println();
-println('################################');
+println();
 println();
 println('Runtime: ', new Date().getTime() - timeStart, 'ms');
 println();
