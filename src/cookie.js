@@ -26,22 +26,26 @@
     if ($C.is_a(value, String)) mode = 'w';
     if (options.duration < 0) mode = 'e';
     
-    var ret;
-    if ('e' === mode) {
-      ret = search(name);
-      if (ret === undefined)
-        throw new Error('Cannot expire an unwritten Cookie.');
-      ret = !write(name, '', options);
-      if (ret === false)
-        throw new Error('Cookie could not be expired.');
-    } else if ('w' === mode) {
-      ret = write(name, value, options);
-      if (ret === false)
-        throw new Error('Cookie could not be written.');
-    } else {
-      ret = search(name);
-      if (ret === undefined)
-        throw new Error('Cookie could not be read.');
+    var ret = undefined;
+    switch (mode) {
+      case 'e':
+        ret = search(name);
+        if (ret === undefined)
+          throw new Error('Cannot expire an unwritten Cookie.');
+        ret = !write(name, '', options);
+        if (ret === false)
+          throw new Error('Cookie could not be expired.');
+        break;
+      case 'w':
+        ret = write(name, value, options);
+        if (ret === false)
+          throw new Error('Cookie could not be written.');
+        break;
+      default:
+        ret = search(name);
+        if (ret === undefined)
+          throw new Error('Cookie could not be read.');
+        break;
     }
     return ret;
   };
