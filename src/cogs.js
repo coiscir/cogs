@@ -11,5 +11,5 @@ $C = Cogs = new (function () {
   var $C = this;
   $C.Version = '<%= COGS_VERSION %>';
   
-<%=inc(2, opt(true, false), 'cookie.js', 'query.js', 'type.js')%>
+<%=inc(2, opt(true, false), 'cookie.js', 'query.js', 'time.js', 'type.js')%>
 })();
