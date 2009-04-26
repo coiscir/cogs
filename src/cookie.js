@@ -28,24 +28,25 @@
     
     var ret = undefined;
     switch (mode) {
-      case 'e':
+      case 'r':
         ret = search(name);
         if (ret === undefined)
-          throw new Error('Cannot expire an unwritten Cookie.');
-        ret = !write(name, '', options);
-        if (ret === false)
-          throw new Error('Cookie could not be expired.');
+          throw new Error('Cookie could not be read.');
         break;
       case 'w':
         ret = write(name, value, options);
         if (ret === false)
           throw new Error('Cookie could not be written.');
         break;
-      default:
-        ret = search(name);
-        if (ret === undefined)
-          throw new Error('Cookie could not be read.');
+      case 'e':
+        if (search(name) === undefined)
+          throw new Error('Cannot expire an unwritten Cookie.');
+        ret = !write(name, '', options);
+        if (ret === false)
+          throw new Error('Cookie could not be expired.');
         break;
+      default:
+        throw new Error('Invalid mode: "' + String(mode) + '"');
     }
     return ret;
   };
