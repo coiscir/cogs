@@ -249,4 +249,144 @@
     }
   };
   
+  var phpdate = function (format, time, is_utc) {
+    var day = 24 * 60 * 60 * 1000;
+    
+    var date = new Date(time);
+    
+    // January 1st
+    var janCurr = new Date(is_utc ?
+      $C.utc(date.getUTCFullYear() + 0) : $C.time(date.getFullYear() + 0));
+    var janNext = new Date(is_utc ?
+      $C.utc(date.getUTCFullYear() + 1) : $C.time(date.getFullYear() + 1));
+    
+    // ISO 1st Monday
+    var sunDaysCurr = janCurr[is_utc ? 'getUTCDay' : 'getDay']();
+    var sunDaysNext = janNext[is_utc ? 'getUTCDay' : 'getDay']();
+    var monDaysCurr = tumble(sunDaysCurr, 7);
+    var monDaysNext = tumble(sunDaysNext, 7);
+    var monCurr = janCurr.getTime() -
+      (day * (monDaysCurr - (monDaysCurr >= 4 ? 7 : 0)));
+    var monNext = janNext.getTime() -
+      (day * (monDaysNext - (monDaysNext >= 4 ? 7 : 0)));
+    
+    var base = {};
+    // day, month, year
+      base.date = date[is_utc ? 'getUTCDate' : 'getDate']();
+      base.ord  = (10 <= base.date && base.date <= 19) ? 0 : (base.date % 10);
+      base.mon  = date[is_utc ? 'getUTCMonth' : 'getMonth']();
+      base.year = date[is_utc ? 'getUTCFullYear' : 'getFullYear']();
+    // hour, minute, second
+      base.hour = date[is_utc ? 'getUTCHours' : 'getHours']();
+      base.min  = date[is_utc ? 'getUTCMinutes' : 'getMinutes']();
+      base.sec  = date[is_utc ? 'getUTCSeconds' : 'getSeconds']();
+      base.msec = (((time % 1000) + 1000) % 1000) * 1000;
+    // week
+      base.week = date[is_utc ? 'getUTCDay' : 'getDay']();
+    // timezone
+      base.off  = is_utc ? 0 : date.getTimezoneOffset();
+      base.dst  = is_utc ? false : base.off !== janCurr.getTimezoneOffset();
+      base.zone = -1 * base.off;
+    // leap year
+      base.leap = !(base.year % 4) && !!(base.year % 100) || !(base.year % 400);
+    
+    var monthdays = [31, (base.leap ? 29 : 28),
+      31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+    
+    var format_c = [0].concat('Y-m-d\\TH:i:sP'.split(''));
+    var format_r = [0].concat('D, d M Y H:i:s O'.split(''));
+    var splice = Array.prototype.splice;
+    
+    format = format.split('');
+    var buffer = '';
+    for (var i = 0, colon; i < format.length; i += 1, colon = true) {
+      switch (format[i]) {
+      // day
+        case 'd': buffer += rjust(base.date, 2, '0'); break;
+        case 'D': buffer += weekdays[base.week].substr(0, 3); break;
+        case 'j': buffer += base.date; break;
+        case 'l': buffer += weekdays[base.week]; break;
+        case 'N': buffer += tumble(base.week, 7) + 1; break;
+        case 'S': buffer += ordinal[base.ord] || ordinal[0] || ''; break;
+        case 'w': buffer += base.week; break;
+        case 'z': buffer += to_i((time - janCurr) / day); break;
+      // week
+        case 'W': buffer += rjust((
+                    to_i((
+                      to_i(time / day) -
+                      tumble(base.week, 7) -
+                      to_i((time > monNext ? monNext : monCurr) / day)
+                    ) / 7) + 1
+                  ), 2, '0'); break;
+      // month
+        case 'F': buffer += months[base.mon]; break;
+        case 'm': buffer += rjust(base.mon + 1, 2, '0'); break;
+        case 'M': buffer += months[base.mon].substr(0, 3); break;
+        case 'n': buffer += base.mon + 1; break;
+        case 't': buffer += monthdays[base.mon]; break;
+      // year
+        case 'L': buffer += base.leap ? 1 : 0; break;
+        case 'o': buffer += rjust((
+                    (time < monCurr ? (base.year - 1) :
+                      (time >= monNext ? (base.year + 1) : base.y))
+                  ), 4, '0'); break;
+        case 'Y': buffer += rjust(base.year, 4, '0'); break;
+        case 'y': buffer += rjust(base.year % 100, 2, '0'); break;
+      // time
+        case 'a': buffer += base.h < 12 ? 'am' : 'pm'; break;
+        case 'A': buffer += base.h < 12 ? 'AM' : 'PM'; break;
+        case 'B': buffer += rjust((((
+                    to_i((
+                      (base.hour * 3600) + (base.min * 60) + base.sec +
+                      ((base.off + 60) * 60)
+                    ) / swb)
+                  ) + 1000) % 1000), 3, '0'); break;
+        case 'g': buffer += tumble(base.hour % 12, 12) + 1; break;
+        case 'G': buffer += base.hour; break;
+        case 'h': buffer += rjust(tumble(base.hour % 12, 12) + 1, 2, '0'); break;
+        case 'H': buffer += rjust(base.hour, 2, '0'); break;
+        case 'i': buffer += rjust(base.min, 2, '0'); break;
+        case 's': buffer += rjust(base.sec, 2, '0'); break;
+        case 'u': buffer += rjust(base.msec, 6, '0'); break;
+      // timezone
+        case 'e': break;  /* unsupported */
+        case 'I': buffer += base.dst ? 1 : 0; break;
+        case 'O': colon = false;  /* continue */
+        case 'P': buffer += ''.concat(
+                    (base.zone < 0 ? '-' : '+'),
+                    rjust(Math.abs(to_i(base.zone / 60)), 2, '0'),
+                    (colon ? ':' : ''),
+                    rjust(Math.abs(base.zone % 60), 2, '0')
+                  );
+        case 'T': break;  /* unsupported */
+        case 'Z': buffer += base.zone * 60; break;
+      // full date/time
+        case 'c': splice.apply(format, [i + 1].concat(format_c)); break;
+        case 'r': splice.apply(format, [i + 1].concat(format_r)); break;
+        case 'U': buffer += time; break;
+      // others
+        case '\\': i += 1;
+        default: buffer += (format[i] || ''); break;
+      }
+    }
+    
+    return buffer;
+  };
+  
+  $C.phpdate = function (format, time) {
+    try {
+      return preprocess(phpdate, format, time, false);
+    } catch (e) {
+      throw new Error(e);
+    }
+  };
+
+  $C.phputc = function (format, time) {
+    try {
+      return preprocess(phpdate, format, time, true);
+    } catch (e) {
+      throw new Error(e);
+    }
+  };
+  
 })();
