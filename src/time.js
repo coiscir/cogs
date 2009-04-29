@@ -70,6 +70,21 @@
     return (to_i(num) + top - 1) % top + (off || 0);
   };
   
+  var preprocess = function (f, format, time, utc) {
+    if (!$C.is_a(format, String))
+      throw 'Expected a String format.';
+    
+    if ($C.is_a(time, Date)) time = time.getTime();
+    time = new Date($C.is_a(time, Number) ? time : $C.utc()).getTime();
+    
+    if (time != 0 && !time)
+      throw 'Invalid time.';
+    if (!((utc ? MIN_U : MIN_T) <= time && time <= (utc ? MAX_U : MAX_T)))
+      throw 'Time is out of range (years 1 to 9999).';
+    
+    return f(format, time, utc);
+  };
+  
   var months = [
     'January', 'February', 'March', 'April', 'May', 'June', 'July',
     'August', 'September', 'October', 'November', 'December'
@@ -82,37 +97,7 @@
   
   /**~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~**/
   
-  $C.strftime = function (format, time) {
-    if (!$C.is_a(format, String))
-      throw new Error('Expected a String format.');
-    
-    if ($C.is_a(time, Date)) time = time.getTime();
-    time = new Date($C.is_a(time, Number) ? time : $C.utc()).getTime();
-    
-    if (time != 0 && !time)
-      throw new Error('Invalid time.');
-    if (!(MIN_T <= time && time <= MAX_T))
-      throw new Error('Time is out-of-range (years 1 to 9999).');
-    
-    return strf(format, time, false);
-  };
-
-  $C.strfutc = function (format, time) {
-    if (!$C.is_a(format, String))
-      throw new Error('Expected a String format.');
-    
-    if ($C.is_a(time, Date)) time = time.getTime();
-    time = new Date($C.is_a(time, Number) ? time : $C.utc()).getTime();
-    
-    if (time != 0 && !time)
-      throw new Error('Invalid time.');
-    if (!(MIN_U <= time && time <= MAX_U))
-      throw new Error('Time is out-of-range (years 1 to 9999).');
-    
-    return strf(format, time, true);
-  };
-  
-  var strf = function (format, time, is_utc) {
+  var strftime = function (format, time, is_utc) {
     var day = 24 * 60 * 60 * 1000;
     
     var date = new Date(time);
@@ -246,6 +231,22 @@
     }
     
     return buffer;
+  };
+  
+  $C.strftime = function (format, time) {
+    try {
+      return preprocess(strftime, format, time, false);
+    } catch (e) {
+      throw new Error(e);
+    }
+  };
+
+  $C.strfutc = function (format, time) {
+    try {
+      return preprocess(strftime, format, time, true);
+    } catch (e) {
+      throw new Error(e);
+    }
   };
   
 })();
