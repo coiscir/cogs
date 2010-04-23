@@ -52,6 +52,41 @@
     equals(Cogs.type(new RegExp()),   'regexp',   'regexp');
     equals(Cogs.type(new String()),   'string',   'string');
   });
+  
+  
+  /************/
+  /** Timers **/
+  /************/
+  
+  module('Profiling');
+  
+  test('Type', function () {
+    var count = 50000, type = Cogs.type, time, i, diff;
+
+    time = new Date().getTime();
+    i = count;
+    while (i-- > 0) {
+      typeof [];
+      typeof true;
+      typeof 0;
+      typeof '';
+    }
+    diff = new Date().getTime() - time;
+    equals(diff, diff, 'typeof');
+    
+    time = new Date().getTime();
+    i = count;
+    while (i-- > 0) {
+      type([]);
+      type(true);
+      type(0);
+      type('');
+    }
+    diff = new Date().getTime() - time;
+    equals(diff, diff, 'Cogs.type');
+      
+    start();
+  });
 </script>
 </body>
 </html>
