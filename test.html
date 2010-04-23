@@ -21,6 +21,37 @@
   test('Global', 1, function () {
     ok(!!window.Cogs, 'Cogs is defined');
   });
+  
+  
+  /**************/
+  /** Type Cog **/
+  /**************/
+  
+  module('Type');
+  
+  test('Literal Types', 9, function () {
+    equals(Cogs.type(undefined),    'undefined', 'undefined');
+    equals(Cogs.type(null),         'null',      'null');
+    equals(Cogs.type([]),           'array',     'array');
+    equals(Cogs.type(true),         'boolean',   'boolean');
+    equals(Cogs.type(function(){}), 'function',  'function');
+    equals(Cogs.type(0),            'number',    'number');
+    equals(Cogs.type({}),           'object',    'object');
+    equals(Cogs.type(/./),          'regexp',    'regexp');
+    equals(Cogs.type(''),           'string',    'string');
+  });
+  
+  test('Constructor Types', 9, function () {
+    equals(Cogs.type(new Array()),    'array',    'array');
+    equals(Cogs.type(new Boolean()),  'boolean',  'boolean');
+    equals(Cogs.type(new Date()),     'date',     'date');
+    equals(Cogs.type(new Error()),    'error',    'error');
+    equals(Cogs.type(new Function()), 'function', 'function');
+    equals(Cogs.type(new Number()),   'number',   'number');
+    equals(Cogs.type(new Object()),   'object',   'object');
+    equals(Cogs.type(new RegExp()),   'regexp',   'regexp');
+    equals(Cogs.type(new String()),   'string',   'string');
+  });
 </script>
 </body>
 </html>
