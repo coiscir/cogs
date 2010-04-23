@@ -53,6 +53,16 @@
     equals(Cogs.type(new String()),   'string',   'string');
   });
   
+  // IE9 Preview is missing proper chaining
+  test('Error Prototype Chains', function () {
+    ok(new EvalError() instanceof Error, 'EvalError');
+    ok(new RangeError() instanceof Error, 'RangeError');
+    ok(new ReferenceError() instanceof Error, 'ReferenceError');
+    ok(new SyntaxError() instanceof Error, 'SyntaxError');
+    ok(new TypeError() instanceof Error, 'TypeError');
+    ok(new URIError() instanceof Error, 'URIError');
+  });
+  
   
   /************/
   /** Timers **/
