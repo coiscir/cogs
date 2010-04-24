@@ -142,38 +142,74 @@
   });
   
   
-  /************/
-  /** Timers **/
-  /************/
+  /***************/
+  /** Profiling **/
+  /***************/
   
   module('Profiling');
   
-  test('Type', function () {
-    var count = 50000, type = Cogs.type, time, i, diff;
+  asyncTest('Type', function () {
+    setTimeout(function () {
+      var count = 50000, type = Cogs.type, time, i, diff;
 
-    time = new Date().getTime();
-    i = count;
-    while (i-- > 0) {
-      typeof [];
-      typeof true;
-      typeof 0;
-      typeof '';
-    }
-    diff = new Date().getTime() - time;
-    equals(diff, diff, 'typeof');
-    
-    time = new Date().getTime();
-    i = count;
-    while (i-- > 0) {
-      type([]);
-      type(true);
-      type(0);
-      type('');
-    }
-    diff = new Date().getTime() - time;
-    equals(diff, diff, 'Cogs.type');
+      time = new Date().getTime();
+      i = count;
+      while (i-- > 0) {
+        typeof [];
+        typeof true;
+        typeof 0;
+        typeof '';
+      }
+      diff = new Date().getTime() - time;
+      equals(diff, diff, 'typeof');
       
-    start();
+      time = new Date().getTime();
+      i = count;
+      while (i-- > 0) {
+        type([]);
+        type(true);
+        type(0);
+        type('');
+      }
+      diff = new Date().getTime() - time;
+      equals(diff, diff, 'Cogs.type');
+      
+      start();
+    }, 1);
+  });
+  
+  asyncTest('Is-A', function () {
+    setTimeout(function () {
+      function A() { }
+      function B() { }
+      B.prototype = new A();
+      
+      var count = 20000, is_a = Cogs.is_a, time, i, diff;
+      
+      time = new Date().getTime();
+      i = count;
+      while (i-- > 0) {
+        new B() instanceof A;
+        new TypeError() instanceof Error;
+        new Object() instanceof Object;
+        true instanceof Boolean;
+      }
+      diff = new Date().getTime() - time;
+      equals(diff, diff, 'typeof');
+      
+      time = new Date().getTime();
+      i = count;
+      while (i-- > 0) {
+        is_a(new B(), A);
+        is_a(new TypeError(), Error);
+        is_a(new Object(), Object);
+        is_a(true, Boolean);
+      }
+      diff = new Date().getTime() - time;
+      equals(diff, diff, 'Cogs.type');
+      
+      start();
+    }, 1);
   });
 </script>
 </body>
