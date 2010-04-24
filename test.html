@@ -54,6 +54,83 @@
     equals(Cogs.type(new String()),   'string',   'string');
   });
   
+  
+  module('Is-A');
+  
+  test('Literal', 18, function () {
+    ok(Cogs.is_a(undefined,    'undefined'), 'undefined');
+    ok(Cogs.is_a(null,         'null'),      'null');
+    ok(Cogs.is_a([],           'array'),     'array');
+    ok(Cogs.is_a(true,         'boolean'),   'boolean');
+    ok(Cogs.is_a(function(){}, 'function'),  'function');
+    ok(Cogs.is_a(0,            'number'),    'number');
+    ok(Cogs.is_a({},           'object'),    'object');
+    ok(Cogs.is_a(/./,          'regexp'),    'regexp');
+    ok(Cogs.is_a('',           'string'),    'string');
+    
+    ok(Cogs.is_a(undefined,    undefined), 'undefined');
+    ok(Cogs.is_a(null,         null),      'null');
+    ok(Cogs.is_a([],           Array),     'array');
+    ok(Cogs.is_a(true,         Boolean),   'boolean');
+    ok(Cogs.is_a(function(){}, Function),  'function');
+    ok(Cogs.is_a(0,            Number),    'number');
+    ok(Cogs.is_a({},           Object),    'object');
+    ok(Cogs.is_a(/./,          RegExp),    'regexp');
+    ok(Cogs.is_a('',           String),    'string');
+  });
+  
+  test('Object', 18, function () {
+    ok(Cogs.is_a(new Array(),    'array'),    'array');
+    ok(Cogs.is_a(new Boolean(),  'boolean'),  'boolean');
+    ok(Cogs.is_a(new Date(),     'date'),     'date');
+    ok(Cogs.is_a(new Error(),    'error'),    'error');
+    ok(Cogs.is_a(new Function(), 'function'), 'function');
+    ok(Cogs.is_a(new Number(),   'number'),   'number');
+    ok(Cogs.is_a(new Object(),   'object'),   'object');
+    ok(Cogs.is_a(new RegExp(),   'regexp'),   'regexp');
+    ok(Cogs.is_a(new String(),   'string'),   'string');
+    
+    ok(Cogs.is_a(new Array(),    Array),    'array');
+    ok(Cogs.is_a(new Boolean(),  Boolean),  'boolean');
+    ok(Cogs.is_a(new Date(),     Date),     'date');
+    ok(Cogs.is_a(new Error(),    Error),    'error');
+    ok(Cogs.is_a(new Function(), Function), 'function');
+    ok(Cogs.is_a(new Number(),   Number),   'number');
+    ok(Cogs.is_a(new Object(),   Object),   'object');
+    ok(Cogs.is_a(new RegExp(),   RegExp),   'regexp');
+    ok(Cogs.is_a(new String(),   String),   'string');
+  });
+  
+  test('Built-In Inheritance', 6, function () {
+    ok(Cogs.is_a(new EvalError(),      Error), 'EvalError');
+    ok(Cogs.is_a(new RangeError(),     Error), 'RangeError');
+    ok(Cogs.is_a(new ReferenceError(), Error), 'ReferenceError');
+    ok(Cogs.is_a(new SyntaxError(),    Error), 'SyntaxError');
+    ok(Cogs.is_a(new TypeError(),      Error), 'TypeError');
+    ok(Cogs.is_a(new URIError(),       Error), 'URIError');
+  });
+  
+  test('Custom Inheritance', 6, function () {
+    function A() { }
+    function B() { }
+    function C() { }
+    function D() { }
+    function MyArray() { }
+    
+    B.prototype = new A();
+    C.prototype = new B();
+    D.prototype = new B();
+    MyArray.prototype = new Array();
+    
+    ok(Cogs.is_a(new B(), A), 'B -> A');
+    ok(Cogs.is_a(new C(), A), 'C -> A');
+    ok(Cogs.is_a(new C(), B), 'C -> B');
+    ok(Cogs.is_a(new D(), B), 'D -> B');
+    ok(!Cogs.is_a(new D(), C), 'D !> C');
+    
+    ok(Cogs.is_a(new MyArray(), Array), 'MyArray -> Array');
+  });
+  
   // IE9 Preview is missing proper chaining
   test('Error Prototype Chains', function () {
     ok(new EvalError() instanceof Error, 'EvalError');

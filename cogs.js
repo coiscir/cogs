@@ -51,5 +51,28 @@ new function Cogs() {
       }
     };
     
+    Cogs.fn.is_a = function is_a(object, compare) {
+      switch (Cogs.type(compare)) {
+        case UND: return object === compare;
+        case NUL: return object === compare;
+        case STR: return Cogs.type(object) === compare;
+        case FNC:
+          switch (compare) {
+            case Boolean: return Cogs.type(object) === BLN;
+            case Number:  return Cogs.type(object) === NUM;
+            case String:  return Cogs.type(object) === STR;
+            default:      return object instanceof compare;
+          }
+        default: return false;
+      }
+    };
+    
+    Cogs.fn.isof = function isof(object, compare) {
+      for (var i = 1; i < arguments.length; i += 1)
+        if (true === Cogs.is_a(object, arguments[i]))
+          return true;
+      return false;
+    };
+    
   })();
 }();
