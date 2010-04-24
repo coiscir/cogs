@@ -14,6 +14,53 @@ new function Cogs() {
   
   
   /**************/
+  /** Time Cog **/
+  /**************/
+  
+  (function () {
+    
+    Cogs.fn.time = function time(yr, mn, dy, hr, mi, sc, ms) {
+      var date = new Date();
+      
+      if (arguments.length > 0) {
+        yr = (+yr || 0);
+        mn = (+mn || 1) - 1;
+        dy = (+dy || 1);
+        hr = (+hr || 0);
+        mi = (+mi || 0);
+        sc = (+sc || 0);
+        ms = (+ms || 0);
+        
+        date.setFullYear(yr, mn, dy);
+        date.setHours(hr, mi, sc, ms);
+      }
+      
+      return date.getTime();
+    };
+    
+    Cogs.fn.utc = function utc(yr, mn, dy, hr, mi, sc, ms) {
+      var date = new Date();
+      
+      if (arguments.length > 0) {
+        yr = (+yr || 0);
+        mn = (+mn || 1) - 1;
+        dy = (+dy || 1);
+        hr = (+hr || 0);
+        mi = (+mi || 0);
+        sc = (+sc || 0);
+        ms = (+ms || 0);
+        
+        date.setUTCFullYear(yr, mn, dy);
+        date.setUTCHours(hr, mi, sc, ms);
+      }
+      
+      return date.getTime();
+    };
+    
+  })();
+  
+  
+  /**************/
   /** Type Cog **/
   /**************/
   

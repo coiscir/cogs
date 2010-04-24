@@ -25,6 +25,29 @@
   
   
   /**************/
+  /** Time Cog **/
+  /**************/
+  
+  module('Time');
+  
+  test('Time/UTC', function () {
+    var year = new Date().getFullYear(),
+        date = new Date(year, 0),
+        zone = date.getTimezoneOffset() * -1 * 60 * 1000;
+    
+    equals(Cogs.utc(), Cogs.time(), 'time <=> utc');
+    
+    equals(Cogs.utc(year) - Cogs.time(year), zone, 'Timezone Offset');
+    
+    equals(Cogs.utc(0),         -62167219200000, 'Absolute 0 -- Midnight, January 1st, Year-0 UTC');
+    equals(Cogs.utc(10000) - 1, 253402300799999, '4-Year End -- December 31, Year 9999 23:59:59.999 UTC');
+    
+    equals(Cogs.time(0),         -62167219200000 - zone, 'Absolute 0 -- Local Time');
+    equals(Cogs.time(10000) - 1, 253402300799999 - zone, '4-Year End -- Local Time');
+  });
+  
+  
+  /**************/
   /** Type Cog **/
   /**************/
   
