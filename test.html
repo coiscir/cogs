@@ -30,7 +30,7 @@
   
   module('Type');
   
-  test('Literal Types', 9, function () {
+  test('Literal', 9, function () {
     equals(Cogs.type(undefined),    'undefined', 'undefined');
     equals(Cogs.type(null),         'null',      'null');
     equals(Cogs.type([]),           'array',     'array');
@@ -42,7 +42,7 @@
     equals(Cogs.type(''),           'string',    'string');
   });
   
-  test('Constructor Types', 9, function () {
+  test('Object', 9, function () {
     equals(Cogs.type(new Array()),    'array',    'array');
     equals(Cogs.type(new Boolean()),  'boolean',  'boolean');
     equals(Cogs.type(new Date()),     'date',     'date');
