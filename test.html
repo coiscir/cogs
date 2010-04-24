@@ -18,8 +18,9 @@
 <script>
   module('Core');
   
-  test('Global', 1, function () {
+  test('Global', 2, function () {
     ok(!!window.Cogs, 'Cogs is defined');
+    equals(Cogs.fn, Cogs.constructor.prototype, 'Prototype exposed as `Cogs.fn`');
   });
   
   
