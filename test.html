@@ -30,7 +30,7 @@
   
   module('Time');
   
-  test('Time/UTC', function () {
+  test('Time/UTC', 6, function () {
     var year = new Date().getFullYear(),
         date = new Date(year, 0),
         zone = date.getTimezoneOffset() * -1 * 60 * 1000;
