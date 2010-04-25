@@ -46,6 +46,17 @@
     equals(Cogs.time(10000) - 1, 253402300799999 - zone, '4-Year End -- Local Time');
   });
   
+  test('strftime', 6, function () {
+    equals(Cogs.strftime('%FT%T', Cogs.time(1)),         '0001-01-01T00:00:00', 'strftime: Year 1');
+    equals(Cogs.strftime('%FT%T', Cogs.time(10000) - 1), '9999-12-31T23:59:59', 'strftime: Year 9999');
+    equals(Cogs.strfutc('%FT%T', Cogs.utc(1)),           '0001-01-01T00:00:00', 'strfutc: Year 1');
+    equals(Cogs.strfutc('%FT%T', Cogs.utc(10000) - 1),   '9999-12-31T23:59:59', 'strfutc: Year 9999');
+    
+    equals(Cogs.strfutc('%F %T', Cogs.utc(1)), Cogs.strfutc('%Y-%m-%d %H:%M:%S', Cogs.utc(1)), 'Preformatted <=> Verbose');
+    
+    equals(Cogs.strfutc('%c', Cogs.utc(2008, 7, 15, 12, 24, 48)), 'Tue, 15 Jul 2008 12:24:48 GMT', 'Preformatted UTC: %c');
+  });
+  
   
   /**************/
   /** Type Cog **/

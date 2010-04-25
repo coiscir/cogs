@@ -185,6 +185,118 @@ new function Cogs() {
       return base;
     }
     
+    
+    /* strftime */
+    
+    function strf(format, base) {
+      with (base) {
+        
+        return format.replace(/%(.)/g, function (match, convert) {
+          switch (convert) {
+            case 'c': return '%a, %e %b %Y %H:%M:%S GMT' + (IS_UTC ? '' : '%z');
+            case 'D': return '%m/%d/%y';
+            case 'F': return '%Y-%m-%d';
+            case 'r': return '%I:%M:%S %p';
+            case 'R': return '%H:%M';
+            case 'T': return '%H:%M:%S';
+            case 'v': return '%e-%b-%Y';
+            case 'x': return '%Y-%m-%d';
+            case 'X': return '%H:%M:%S';
+            
+            /* unsupported
+            case 'E': ...;
+            case 'O': ...;
+            case 'Z': ...;
+            */
+            
+            default:  return match;
+          }
+        }).replace(/%(.)/g, function (match, convert) {
+          switch (convert) {
+            case '%': return '%';
+            case 'a': return WEEKDAYS[WEEKDAY].substr(0, 3);
+            case 'A': return WEEKDAYS[WEEKDAY];
+            case 'b': return MONTHS[MONTH].substr(0, 3);
+            case 'B': return MONTHS[MONTH];
+            case 'C': return justify(integer(YEAR / 100), 2, '0');
+            case 'd': return justify(DATE, 2, '0');
+            case 'e': return justify(DATE, 2, ' ');
+            case 'g': return justify((
+                        (TIME < ISO_MONDAY_CURR ? (YEAR - 1) :
+                          (TIME >= ISO_MONDAY_NEXT ? (YEAR + 1) : YEAR)
+                        )
+                      ) % 100, 2, '0');
+            case 'G': return justify((
+                        (TIME < ISO_MONDAY_CURR ? (YEAR - 1) :
+                          (TIME >= ISO_MONDAY_NEXT ? (YEAR + 1) : YEAR)
+                        )
+                      ), 4, '0');
+            case 'h': return MONTHS[MONTH].substr(0, 3);
+            case 'H': return justify(HOUR, 2, '0');
+            case 'I': return justify(tumble(HOUR % 12, 12, 1), 2, '0');
+            case 'j': return justify(DAYOFYEAR + 1, 3, '0');
+            case 'k': return justify(HOUR, 2);
+            case 'l': return justify(tumble(HOUR % 12, 12, 1), 2, ' ');
+            case 'm': return justify(MONTH + 1, 2, '0');
+            case 'M': return justify(MINUTE, 2, '0');
+            case 'n': return '\n';
+            case 'N': return justify(MSEC, 3, '0');
+            case 'p': return MERIDIEM[HOUR < 12 ? 0 : 1];
+            case 'P': return MERIDIEM[HOUR < 12 ? 2 : 3];
+            case 's': return integer(TIME / 1000);
+            case 'S': return justify(SECOND, 2, '0');
+            case 't': return '\t';
+            case 'u': return tumble(WEEKDAY, 7, 1);
+            case 'U': return justify(integer((TIME - FIRST_SUNDAY) / (7 * DAY)), 2, '0');
+            case 'V': return justify((
+                        integer((
+                          integer(TIME / DAY) -
+                          tumble(WEEKDAY, 7) -
+                          integer((
+                            (TIME > ISO_MONDAY_NEXT ? ISO_MONDAY_NEXT : ISO_MONDAY_CURR)
+                          ) / DAY)
+                        ) / 7) + 1
+                      ), 2, '0');
+            case 'w': return WEEKDAY;
+            case 'W': return justify(integer((TIME - FIRST_MONDAY) / (7 * DAY)), 2, '0');
+            case 'y': return justify((YEAR % 100), 2, '0');
+            case 'Y': return justify(YEAR, 4, '0');
+            case 'z': return (
+                        (TIMEZONE < 0 ? '-' : '+') +
+                        justify(Math.abs(integer(TIMEZONE / 60)), 2, '0') +
+                        justify(Math.abs(TIMEZONE % 60), 2, '0')
+                      );
+            default:  return match;
+          }
+        });
+        
+      }
+    }
+    
+    Cogs.fn.strftime = function strftime(format, time) {
+      if (time == null) {
+        time = Cogs.time();
+      }
+      
+      if (Cogs.isof(time, Date, Number)) {
+        return strf((format || ''), preamble(time, false));
+      } else {
+        throw new TypeError('Expected time to be a Date or Number.');
+      }
+    };
+    
+    Cogs.fn.strfutc = function strfutc(format, time) {
+      if (time == null) {
+        time = Cogs.time();
+      }
+      
+      if (Cogs.isof(time, Date, Number)) {
+        return strf((format || ''), preamble(time, true));
+      } else {
+        throw new TypeError('Expected time to be a Date or Number.');
+      }
+    };
+    
   })();
   
   
