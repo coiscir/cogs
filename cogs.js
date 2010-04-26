@@ -102,11 +102,11 @@ new function Cogs() {
     
     function preamble(time, isUtc) {
       var base = {}, date,
-        january1stCurr, january1stNext, // January 1st, Midnight
-        daysSundayCurr, daysSundayNext, // January 1st, Day of Sunday Week
-        daysMondayCurr, daysMondayCurr, // January 1st, Day of Monday Week
-        isoMondayCurr, isoMondayNext,   // First Monday of ISO-8601 Year
-        firstSunday, firstMonday;       // Week Starts before January 1st
+        january1stCurr, january1stNext, january1stPrev, // January 1st, Midnight
+        daysSundayCurr, daysSundayNext, daysSundayPrev, // January 1st, Day of Sunday Week
+        daysMondayCurr, daysMondayCurr, daysMondayPrev, // January 1st, Day of Monday Week
+        isoMondayCurr, isoMondayNext, isoMondayPrev,    // First Monday of ISO-8601 Year
+        firstSunday, firstMonday;                       // Week Starts before January 1st
       
       date = new Date(time);
       time = date.getTime();
@@ -127,19 +127,26 @@ new function Cogs() {
         Cogs.utc(date.getUTCFullYear() + 0) : Cogs.time(date.getFullYear() + 0));
       january1stNext = new Date(isUtc ?
         Cogs.utc(date.getUTCFullYear() + 1) : Cogs.time(date.getFullYear() + 1));
+      january1stPrev = new Date(isUtc ?
+        Cogs.utc(date.getUTCFullYear() - 1) : Cogs.time(date.getFullYear() - 1));
       
       daysSundayCurr = isUtc ?
         january1stCurr.getUTCDay() : january1stCurr.getDay();
       daysSundayNext = isUtc ?
         january1stNext.getUTCDay() : january1stNext.getDay();
+      daysSundayPrev = isUtc ?
+        january1stPrev.getUTCDay() : january1stPrev.getDay();
       
       daysMondayCurr = tumble(daysSundayCurr, 7);
       daysMondayNext = tumble(daysSundayNext, 7);
+      daysMondayPrev = tumble(daysSundayPrev, 7);
       
       isoMondayCurr = january1stCurr.getTime() -
         (DAY * (daysMondayCurr - (daysMondayCurr >= 4 ? 7 : 0)));
       isoMondayNext = january1stNext.getTime() -
         (DAY * (daysMondayNext - (daysMondayNext >= 4 ? 7 : 0)));
+      isoMondayPrev = january1stPrev.getTime() -
+        (DAY * (daysMondayPrev - (daysMondayPrev >= 4 ? 7 : 0)));
       
       firstSunday = january1stCurr.getTime() - (DAY * daysSundayCurr);
       firstMonday = january1stCurr.getTime() - (DAY * daysMondayCurr);
@@ -179,6 +186,7 @@ new function Cogs() {
         
         base.ISO_MONDAY_CURR = isoMondayCurr;
         base.ISO_MONDAY_NEXT = isoMondayNext;
+        base.ISO_MONDAY_PREV = isoMondayPrev;
       
       }
       
@@ -253,7 +261,9 @@ new function Cogs() {
                           integer(TIME / DAY) -
                           tumble(WEEKDAY, 7) -
                           integer((
-                            (TIME > ISO_MONDAY_NEXT ? ISO_MONDAY_NEXT : ISO_MONDAY_CURR)
+                            (TIME >= ISO_MONDAY_NEXT ? ISO_MONDAY_NEXT : 
+                              (TIME >= ISO_MONDAY_CURR ? ISO_MONDAY_CURR : ISO_MONDAY_PREV)
+                            )
                           ) / DAY)
                         ) / 7) + 1
                       ), 2, '0');
