@@ -260,6 +260,15 @@
     ok(Cogs.is_a(new String(),   String),   'string');
   });
   
+  test('Specials', function () {
+    ok(Cogs.isof(undefined, undefined, null), 'nil: (manual w/ isof)');
+    ok(Cogs.is_a(undefined, 'nil'), 'nil: undefined');
+    ok(Cogs.is_a(null,      'nil'), 'nil: null');
+    ok(!Cogs.is_a(false,    'nil'), 'nil ! false');
+    ok(!Cogs.is_a(0,        'nil'), 'nil ! 0');
+    ok(!Cogs.is_a('',       'nil'), 'nil ! ""');
+  });
+  
   test('Built-In Inheritance', 6, function () {
     ok(Cogs.is_a(new EvalError(),      Error), 'EvalError');
     ok(Cogs.is_a(new RangeError(),     Error), 'RangeError');

@@ -429,7 +429,8 @@ new function Cogs() {
         DTE = 'date',      ERR = 'error',
         FNC = 'function',  NUM = 'number',
         OBJ = 'object',    RGX = 'regexp',
-        STR = 'string',    UNK = 'unknown';
+        STR = 'string',    UNK = 'unknown',
+        NIL = 'nil';
     
     Cogs.fn.type = function type(object) {
       switch (typeof object) {
@@ -460,7 +461,11 @@ new function Cogs() {
       switch (Cogs.type(compare)) {
         case UND: return object === compare;
         case NUL: return object === compare;
-        case STR: return Cogs.type(object) === compare;
+        case STR:
+          switch (compare) {
+            case NIL: return object == null;
+            default:  return Cogs.type(object) === compare;
+          }
         case FNC:
           switch (compare) {
             case Boolean: return Cogs.type(object) === BLN;
