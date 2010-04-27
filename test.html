@@ -112,6 +112,76 @@
     }
   });
   
+  test('phpdate', 6, function () {
+    equals(Cogs.phpdate('Y-m-d\\TH:i:s', Cogs.time(1)),         '0001-01-01T00:00:00', 'strftime: Year 1');
+    equals(Cogs.phpdate('Y-m-d\\TH:i:s', Cogs.time(10000) - 1), '9999-12-31T23:59:59', 'strftime: Year 9999');
+    equals(Cogs.phputc('Y-m-d\\TH:i:s', Cogs.utc(1)),           '0001-01-01T00:00:00', 'strfutc: Year 1');
+    equals(Cogs.phputc('Y-m-d\\TH:i:s', Cogs.utc(10000) - 1),   '9999-12-31T23:59:59', 'strfutc: Year 9999');
+    
+    equals(Cogs.phputc('c', Cogs.utc(1)), Cogs.phputc('Y-m-d\\TH:i:sP', Cogs.utc(1)), 'Preformatted <=> Verbose');
+    
+    equals(Cogs.phputc('r', Cogs.utc(2008, 7, 15, 12, 24, 48)), 'Tue, 15 Jul 2008 12:24:48 +0000', 'Preformatted UTC: r');
+  });
+  
+  test('phpdate (all)', function () {
+    var i,
+      time = Cogs.utc(2010, 1, 3, 0, 8, 16, 32),
+      tests = [
+      // Day
+        ['d', '03'],
+        ['D', 'Sun'],
+        ['j', '3'],
+        ['l', 'Sunday'],
+        ['N', '7'],
+        ['S', 'rd'],
+        ['w', '0'],
+        ['z', '3'],
+      // Week
+        ['W', '53'],
+      // Month
+        ['F', 'January'],
+        ['m', '01'],
+        ['M', 'Jan'],
+        ['n', '1'],
+        ['t', '31'],
+      // Year
+        ['L', '0'],
+        ['o', '2009'],
+        ['Y', '2010'],
+        ['y', '10'],
+      // Time
+        ['a', 'am'],
+        ['A', 'AM'],
+        ['B', '0'],
+        ['g', '12'],
+        ['G', '0'],
+        ['h', '12'],
+        ['H', '00'],
+        ['i', '08'],
+        ['s', '16'],
+        ['u', '032000'],
+      // Timezone
+        ['I', '0'],
+        ['O', '+0000'],
+        ['P', '+00:00'],
+        ['Z', '0'],
+      // Full Date/Time
+        ['c', '2010-01-03T00:08:16+00:00'],
+        ['r', 'Sun, 03 Jan 2010 00:08:16 +0000'],
+        ['U', '1262477296'],
+      // Other
+        ['\\c', 'c'], // first replace
+        ['\\h', 'h'], // second replace
+        ['x', 'x']
+      ];
+    
+    expect(tests.length);
+    
+    for (i = 0; i < tests.length; i += 1) {
+      equals(Cogs.phputc(tests[i][0], time), tests[i][1], tests[i][0]);
+    }
+  });
+  
   
   /**************/
   /** Type Cog **/
