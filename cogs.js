@@ -193,7 +193,7 @@ new function Cogs() {
         
         base.WEEKDAY = isUtc ? date.getUTCDay() : date.getDay();
         
-        base.DAYOFYEAR = integer((TIME - january1stCurr.getTime()) / DAY);
+        base.DAYOFYEAR = integer((TIME - january1stCurr.getTime()) / DAY) + 1;
         
         base.FIRST_SUNDAY = firstSunday;
         base.FIRST_MONDAY = firstMonday;
@@ -256,7 +256,7 @@ new function Cogs() {
             case 'h': return MONTHS[MONTH].substr(0, 3);
             case 'H': return justify(HOUR, 2, '0');
             case 'I': return justify(tumble(HOUR % 12, 12, 1), 2, '0');
-            case 'j': return justify(DAYOFYEAR + 1, 3, '0');
+            case 'j': return justify(DAYOFYEAR, 3, '0');
             case 'k': return justify(HOUR, 2);
             case 'l': return justify(tumble(HOUR % 12, 12, 1), 2, ' ');
             case 'm': return justify(MONTH + 1, 2, '0');
