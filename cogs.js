@@ -100,6 +100,21 @@ new function Cogs() {
       ORDINALS = ['th', 'st', 'nd', 'rd'],
       MERIDIEM = ['AM', 'PM', 'am', 'pm'];
     
+    function preface(fn, format, time, isUtc) {
+      if (format == null || format === '') {
+        return '';
+      }
+      if (time == null) {
+        time = Cogs.time();
+      }
+      
+      if (Cogs.isof(time, Date, Number)) {
+        return fn(String(format || ''), preamble(time, isUtc));
+      } else {
+        throw new TypeError('Expected time to be a Date or Number.');
+      }
+    }
+    
     function preamble(time, isUtc) {
       var base = {}, date,
         january1stCurr, january1stNext, january1stPrev, // January 1st, Midnight
@@ -284,27 +299,11 @@ new function Cogs() {
     }
     
     Cogs.fn.strftime = function strftime(format, time) {
-      if (time == null) {
-        time = Cogs.time();
-      }
-      
-      if (Cogs.isof(time, Date, Number)) {
-        return strf((format || ''), preamble(time, false));
-      } else {
-        throw new TypeError('Expected time to be a Date or Number.');
-      }
+      return preface(strf, format, time, false);
     };
     
     Cogs.fn.strfutc = function strfutc(format, time) {
-      if (time == null) {
-        time = Cogs.time();
-      }
-      
-      if (Cogs.isof(time, Date, Number)) {
-        return strf((format || ''), preamble(time, true));
-      } else {
-        throw new TypeError('Expected time to be a Date or Number.');
-      }
+      return preface(strf, format, time, true);
     };
     
   })();
