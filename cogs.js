@@ -186,7 +186,6 @@ new function Cogs() {
         base.MINUTE = isUtc ? date.getUTCMinutes() : date.getMinutes();
         base.SECOND = isUtc ? date.getUTCSeconds() : date.getSeconds();
         base.MSEC = isUtc ? date.getUTCMilliseconds() : date.getMilliseconds();
-        base.NSEC = base.MSEC * 1000;
         
         base.OFFSET = isUtc ? 0 : date.getTimezoneOffset();
         base.IS_DST = isUtc ? false : OFFSET !== january1stCurr.getTimezoneOffset();
