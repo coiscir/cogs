@@ -257,7 +257,7 @@ new function Cogs() {
             case 'H': return justify(HOUR, 2, '0');
             case 'I': return justify(tumble(HOUR % 12, 12, 1), 2, '0');
             case 'j': return justify(DAYOFYEAR, 3, '0');
-            case 'k': return justify(HOUR, 2);
+            case 'k': return justify(HOUR, 2, ' ');
             case 'l': return justify(tumble(HOUR % 12, 12, 1), 2, ' ');
             case 'm': return justify(MONTH + 1, 2, '0');
             case 'M': return justify(MINUTE, 2, '0');
