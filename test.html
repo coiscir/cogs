@@ -24,6 +24,36 @@
   });
   
   
+  /****************/
+  /** Cookie Cog **/
+  /****************/
+  
+  module('Cookie');
+  
+  test('Create', function () {
+    ok(Cogs.cookie('foo', 'nil'),                  'Write: foo=nil');
+    ok(Cogs.cookie('bar', '   ', {duration: 2}),   'Write: bar=+++ (2 days)');
+    
+    ok(!Cogs.cookie('nil', '', {duration: -1}),    'Write: nil= (-1 days, or expired)');
+  });
+  
+  test('Search', function () {
+    equals(Cogs.cookie('foo'), 'nil', 'Read: foo=nil');
+    equals(Cogs.cookie('bar'), '   ', 'Read: bar=+++');
+    
+    ok(Cogs.is_a(Cogs.cookie('nil'), 'nil'), 'Read: nil (expired)');
+  });
+  
+  test('Expire', function () {
+    equals(document.cookie, document.cookie, 'Verify Cookies');
+    
+    ok(!Cogs.cookie('foo', null, true), 'Expire: foo (options === true)');
+    ok(!Cogs.cookie('bar', null, -1),   'Expire: bar (options === -1)');
+    
+    equals(document.cookie, document.cookie, 'Verify Cookies');
+  });
+  
+  
   /**************/
   /** Time Cog **/
   /**************/

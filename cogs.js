@@ -35,6 +35,94 @@ new function Cogs() {
   }
   
   
+  /****************/
+  /** Cookie Cog **/
+  /****************/
+  
+  (function () {
+    
+    var PAIRS, SOURCE, DAY = 24 * 60 * 60 * 1000;;
+    
+    function preamble() {
+      var i, pair, key, val, cookies,
+        source = document.cookie.valueOf();
+      
+      if (SOURCE !== source) {
+        PAIRS = {};
+        SOURCE = source;
+        cookies = SOURCE.replace(/\+/g, '%20').split(/\;\s*/);
+        
+        for (i = 0; i < cookies.length; i += 1) {
+          pair = cookies[i].split(/=/, 2);
+          key = decodeURIComponent(pair[0]);
+          val = decodeURIComponent(pair[1] || '');
+          
+          PAIRS[key] = val;
+        }
+      }
+      
+      return PAIRS;
+    }
+    
+    function create(name, value, options) {
+      var cookie = [];
+      
+      if (options === true)
+        options = {duration: -1};
+      if (Cogs.is_a(options, Number))
+        options = {duration: options};
+      
+      options = options || {};
+      options = {
+        duration: Cogs.is_a(options.duration, Number) ? options.duration : null,
+        domain:   Cogs.is_a(options.domain,   String) ? options.domain   : null,
+        path:     Cogs.is_a(options.path,     String) ? options.path     : null,
+        secure:   Cogs.is_a(options.secure,  Boolean) ? options.secure   : null
+      };
+      
+      cookie.push(
+        encodeURIComponent(name) + '=' +
+        encodeURIComponent(value)
+      );
+      
+      if (Cogs.is_a(options.duration, Number))
+        cookie.push('expires=' + 
+          new Date(Cogs.utc() + options.duration * DAY).toUTCString()
+        );
+      
+      if (options.domain)
+        cookie.push('domain=' + encodeURIComponent(options.domain));
+      
+      if (options.path)
+        cookie.push('path=' + encodeURIComponent(options.path));
+      
+      if (options.secure)
+        cookie.push('secure');
+      
+      document.cookie = cookie.join('; ').replace(/%20/g, '+');
+      
+      return !Cogs.is_a(search(name), 'nil');
+    }
+    
+    function search(name) {
+      var pairs = preamble();
+      
+      if (Cogs.is_a(pairs[name], String))
+        return pairs[name];
+      else
+        return null;
+    }
+    
+    Cogs.fn.cookie = function cookie(name, value, options) {
+      if (arguments.length <= 1)
+        return search(name);
+      else
+        return create(name, value, options);
+    };
+    
+  })();
+  
+  
   /**************/
   /** Time Cog **/
   /**************/
