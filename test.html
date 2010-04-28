@@ -54,6 +54,33 @@
   });
   
   
+  /***************/
+  /** Query Cog **/
+  /***************/
+  
+  module('Query');
+  
+  test('Search', function () {
+    var search = (
+      "?test=-1058.56e%2B2" +
+      "&demo=%2B!%22%23%24%25%26'()*%2B%2C-.%2F%3A%3B%3C%3D%3E%3F%40%5B%5D%5E_%60%7B%7C%7D~" +
+      "&foo[]=b&foo[]=a&foo[]=r&foo[]='&foo[]=d" +
+      "&+=space" +
+      "&n%2Fa="
+    );
+    
+    equals(Cogs.query('test', search), '-1058.56e+2', 'Simple');
+    equals(Cogs.query('demo', search), "+!\"#$%&'()*+,-./:;<=>?@[]^_`{|}~", 'Encoded Value');
+    
+    same(Cogs.query('foo', search), ['b', 'a', 'r', '\'', 'd'], 'Array search.');
+    
+    equals(Cogs.query(' ', search), 'space', 'Unorthodox Items');
+    equals(Cogs.query('n/a', search), '', 'Blank Value');
+    
+    ok(Cogs.is_a(Cogs.query('nil', search), 'nil'), 'Not found: null');
+  });
+  
+  
   /**************/
   /** Time Cog **/
   /**************/

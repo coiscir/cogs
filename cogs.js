@@ -123,6 +123,55 @@ new function Cogs() {
   })();
   
   
+  /***************/
+  /** Query Cog **/
+  /***************/
+  
+  (function () {
+    
+    var PAIRS, SOURCE;
+    
+    function preamble(source) {
+      var i, vars, pairs, pair, key, val,
+        custom = !Cogs.is_a(source, 'nil'),
+        search = (custom ? source : window.location.search).replace(/^\?+/, '');
+      
+      if (custom || SOURCE !== search) {
+        vars = search.replace(/\+/g, '%20').split(/&/);
+        
+        for (i = 0, pairs = {}; i < vars.length; i += 1) {
+          pair = vars[i].split(/=/, 2);
+          key = decodeURIComponent(pair[0]).replace(/\[\]$/, '');
+          val = decodeURIComponent(pair[1] || '');
+          
+          if (Cogs.is_a(pairs[key], 'nil'))
+            pairs[key] = [val];
+          else
+            pairs[key].push(val);
+        }
+        
+        if (!custom)
+          PAIRS = pairs;
+      }
+      
+      return pairs || PAIRS || {};
+    }
+    
+    Cogs.fn.query = function query(query, source) {
+      var pairs = preamble(source);
+      
+      if (Cogs.is_a(pairs[query], 'nil'))
+        return null;
+      else
+        if (pairs[query].length > 1)
+          return [].concat(pairs[query]);
+        else
+          return pairs[query][0];
+    };
+    
+  })();
+  
+  
   /**************/
   /** Time Cog **/
   /**************/
