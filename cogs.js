@@ -150,8 +150,10 @@ new function Cogs() {
             pairs[key].push(val);
         }
         
-        if (!custom)
+        if (!custom) {
           PAIRS = pairs;
+          SOURCE = source;
+        }
       }
       
       return pairs || PAIRS || {};
