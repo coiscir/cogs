@@ -41,7 +41,7 @@ new function Cogs() {
   
   (function () {
     
-    var PAIRS, SOURCE, DAY = 24 * 60 * 60 * 1000;;
+    var PAIRS, SOURCE, DAY = 24 * 60 * 60 * 1000;
     
     function preamble() {
       var i, pair, key, val, cookies,
@@ -86,7 +86,7 @@ new function Cogs() {
       );
       
       if (Cogs.is_a(options.duration, Number))
-        cookie.push('expires=' + 
+        cookie.push('expires=' +
           new Date(Cogs.utc() + options.duration * DAY).toUTCString()
         );
       
@@ -420,7 +420,7 @@ new function Cogs() {
                           integer(TIME / DAY) -
                           tumble(WEEKDAY, 7) -
                           integer((
-                            (TIME >= ISO_MONDAY_NEXT ? ISO_MONDAY_NEXT : 
+                            (TIME >= ISO_MONDAY_NEXT ? ISO_MONDAY_NEXT :
                               (TIME >= ISO_MONDAY_CURR ? ISO_MONDAY_CURR : ISO_MONDAY_PREV)
                             )
                           ) / DAY)
