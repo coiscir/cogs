@@ -1,13 +1,7 @@
-# Cogs
-#### A JavaScript Utility Library
+# JavaScript Cogs
 
-Cogs is a JavaScript library that attempts to simplify the necessary and routine
-functions for web application development.
-
-### License
-
-Cogs is released and distributable under the terms of the MIT License
-([OSI](http://www.opensource.org/licenses/mit-license.php)).
+Cogs is a stand-alone JavaScript library for the routine and menial;
+for filling the small gaps between the gears of a Web Application.
 
 ### Intended Platforms
 
@@ -19,27 +13,7 @@ Cogs is intended for the following platforms:
   * Apple Safari 2.0 and higher
   * Opera 9.25 and higher
 
-## Using Cogs
+### License
 
-To use Cogs, download and copy either `cogs.js` or `cogs.min.js` to a directory
-on your website (e.g. `/scripts/`) and include it with:
-
->     <script type="text/javascript" src="/scripts/cogs.js"></script>
-
-When building from a source tree, these files are created in the `/lib/`
-directory.
-
-### Building Cogs
-
-To build Cogs, you'll need to have the following:
-
-  * A copy of the Cogs source tree, either by release or Git clone
-  * Ruby 1.8.7 or later (<http://www.ruby-lang.org/>)
-  * RubyGems 1.3.1 or later (<http://www.rubygems.org/>)
-    * JSMin 1.0.1 or later (<http://rubyforge.org/projects/riposte/>)
-    * Rake 0.8.3 or later (<http://rubyforge.org/projects/rake>)
-
-From the Cogs source tree root directory:
-
-  * `rake build` -- Build full and minified composite library scripts.
-  * `rake clean` -- Clean up build files.
+Cogs is released and distributable under the terms of the MIT License
+([OSI](http://www.opensource.org/licenses/mit-license.php)).
