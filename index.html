@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Cogs</title>
+  
+  <!--[if IE]>
+    <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  
+  <style>
+    article, aside, details, figure, footer, header, hgroup, menu, nav, section {
+      display: block;
+    }
+    
+    * { margin: 0; padding: 0; }
+    
+    body {
+      padding: 30pt 50pt;
+      font: normal 12pt/1.1 sans-serif;
+      color: #333;
+      background: #88969f;
+    }
+    
+    code, pre {
+      font-family: Consolas, monospace;
+    }
+    
+    div.container {
+      padding: 10pt;
+      min-width: 500px;
+      max-width: 700px;
+      background: #fff;
+    }
+    
+    aside {
+      float: right;
+    }
+    
+      aside a {
+        color: #6575a4;
+        font-size: 10pt;
+      }
+    
+    header h1 {
+      display: inline;
+      color: #465277;
+    }
+    
+    header h3 {
+      display: inline;
+      color: #8592b7;
+    }
+    
+    nav {
+      margin: 12pt 0 0;
+    }
+    
+      nav ol, nav ul {
+        margin: 0 12pt 0;
+      }
+      
+      nav ol {
+        list-style: none;
+      }
+      
+      nav ul {
+        margin-bottom: 9pt;
+        list-style: none;
+      }
+      
+      nav li {
+        font-weight: bold;
+      }
+      
+      nav a {
+        color: #a18f5e;
+      }
+      
+        nav a code {
+          color: #504730;
+        }
+    
+    section {
+      margin: 50pt 0 0;
+    }
+      
+      section h2 {
+        color: #6575a4;
+      }
+      
+      section section {
+        margin: 12pt 12pt 0;
+      }
+      
+        section p,
+        section details,
+        section figure {
+          margin: 9pt 12pt 0;
+        }
+        
+        section details {
+          display: block;
+          padding: 5pt;
+          background: #e0ebf5;
+        }
+        
+          section details summary {
+            display: block;
+            font-style: italic;
+          }
+          
+          section details section {
+            margin: 12pt 6pt 0;
+          }
+          
+            section details hgroup {
+              font-size: 11pt;
+              border-bottom: 1px solid #aaa;
+            }
+            
+            section details p {
+              margin: 2pt 0 0;
+              font-size: 10pt;
+            }
+        
+        section figure code {
+          padding: 2pt 5pt;
+          background: #f3f3f3;
+          border: 1px solid #ccc;
+          font-size: 10pt;
+        }
+  </style>
+</head>
+<body>
+  
+  <div class="container">
+    
+    <aside>
+      <a href="test.html">Run Test Suite</a>
+    </aside>
+    
+    <header>
+      <h1>Cogs</h1>
+      <h3>JavaScript Toolbox</h3>
+    </header>
+    
+    <nav>
+      <ol>
+        <li><a href="#cookie">Cookie</a></li>
+        <ul>
+          <li><a href="#cogs.cookie"><code>Cogs.cookie</code></a></li>
+        </ul>
+        
+        <li><a href="#query">Query</a></li>
+        <ul>
+          <li><a href="#cogs.query"><code>Cogs.query</code></a></li>
+        </ul>
+        
+        <li><a href="#time">Time</a></li>
+        <ul>
+          <li><a href="#cogs.phpdate"><code>Cogs.phpdate</code> (<code>phputc</code>)</a></li>
+          <li><a href="#cogs.strftime"><code>Cogs.strftime</code> (<code>strfutc</code>)</a></li>
+          <li><a href="#cogs.time"><code>Cogs.time</code> (<code>utc</code>)</a></li>
+        </ul>
+        
+        <li><a href="#type">Type</a></li>
+        <ul>
+          <li><a href="#cogs.is_a"><code>Cogs.is_a</code></a></li>
+          <li><a href="#cogs.isof"><code>Cogs.isof</code></a></li>
+          <li><a href="#cogs.type"><code>Cogs.type</code></a></li>
+        </ul>
+      </ol>
+    </nav>
+    
+    <section>
+      <a class="nav" name="cookie"></a>
+      <h2>Cookie</h2>
+      
+      <section>
+        <a class="nav" name="cogs.cookie"></a>
+        <h3><code>Cogs.cookie</code></h3>
+        
+        <details>
+          <summary>Search for and Create Cookies.</summary>
+          
+          <section>
+            <hgroup>
+              <h4>
+                <aside><code>String</code></aside>
+                <code>Cogs.cookie( name )</code>
+              </h4>
+            </hgroup>
+            
+            <p>
+              <aside><code>String</code></aside>
+              <b>name</b> The key/name of the cookie being searched for.
+            </p>
+          </section>
+          
+          <section>
+            <hgroup>
+              <h4>
+                <aside><code>Boolean</code></aside>
+                <code>Cogs.cookie( name, value, options )</code>
+              </h4>
+            </hgroup>
+            
+            <p>
+              <aside><code>String</code></aside>
+              <b>name</b> The key/name being updated/created.
+            </p>
+            <p>
+              <aside><code>String</code></aside>
+              <b>value</b> The value to be set for the cookie.
+            </p>
+            <p>
+              <aside><code>Object</code></aside>
+              <b>options</b> A key/value to set additional properties of the cookie.
+            </p>
+            
+            <section>
+              <hgroup>
+                <h4><i>Options</i></h4>
+              </hgroup>
+              
+              <p>
+                <aside><code>Number</code></aside>
+                <b>duration</b> The lifespan of the Cookie, in days.
+              </p>
+              <p>
+                <aside><code>String</code></aside>
+                <b>domain</b> The domain the Cookie should be associated to.
+              </p>
+              <p>
+                <aside><code>String</code></aside>
+                <b>path</b> The path the Cookie should be associated to.
+              </p>
+              <p>
+                <aside><code>Boolean</code></aside>
+                <b>secure</b> Set whether the cookie should only be available over secure connections.
+              </p>
+            </section>
+            
+            <section>
+              <hgroup>
+                <h4><i>Alternate Forms</i></h4>
+              </hgroup>
+              
+              <section>
+                <hgroup>
+                  <h4>
+                    <aside><code>Boolean</code></aside>
+                    <code>Cogs.cookie( name, value, duration )</code>
+                  </h4>
+                </hgroup>
+                
+                <p>
+                  <aside><code>Number</code></aside>
+                  <b>duration</b> A shortcut to set <b>options</b> with just <b>duration</b>.
+                </p>
+              </section>
+              
+              <section>
+                <hgroup>
+                  <h4>
+                    <aside><code>Boolean</code></aside>
+                    <code>Cogs.cookie( name, value, expire )</code>
+                  </h4>
+                </hgroup>
+                
+                <p>
+                  <aside><code>Boolean</code></aside>
+                  <b>expire</b> A shortcut to set <b>options</b> as <b><code>{duration: -1}</code></b>.
+                </p>
+              </section>
+            </section>
+          </section>
+        </details>
+      </section>
+      
+    </section>
+    
+    <section>
+      <a class="nav" name="query"></a>
+      <h2>Query</h2>
+      
+      <section>
+        <a class="nav" name="cogs.query"></a>
+        <h3><code>Cogs.query</code></h3>
+        
+        <details>
+          <summary>Search Query-Strings.</summary>
+          
+          <section>
+            <hgroup>
+              <h4>
+                <aside><code>Array, String</code></aside>
+                <code>Cogs.query( name, [ source ] )</code>
+              </h4>
+            </hgroup>
+            
+            <p>
+              <aside><code>String</code></aside>
+              <b>name</b> The key/name to search for.
+            </p>
+            <p>
+              <aside><code>String</code></aside>
+              <b>source</b> A substitute query-string to be searched. (Default: <code>location.search</code>)
+            </p>
+          </section>
+        </details>
+      </section>
+    </section>
+    
+    <section>
+      <a class="nav" name="time"></a>
+      <h2>Time</h2>
+      
+      <section>
+        <a class="nav" name="cogs.phpdate"></a>
+        <h3><code>Cogs.phpdate</code> (<code>phputc</code>)</h3>
+        
+        <details>
+          <summary>Local and UTC Date/Time formatting based on the PHP function <a href="http://php.net/date"><code>date</code></a>.</summary>
+          
+          <section>
+            <hgroup>
+              <h4>
+                <aside><code>String</code></aside>
+                <code>Cogs.phpdate( format, [ time ] )</code>
+              </h4>
+              <h4>
+                <aside><code>String</code></aside>
+                <code>Cogs.phputc( format, [ time ] )</code>
+              </h4>
+            </hgroup>
+            
+            <p>
+              <aside><code>String</code></aside>
+              <b>format</b> The guide for which the <b>time</b> should be formatted.
+            </p>
+            <p>
+              <aside><code>Date, Number</code></aside>
+              <b>time</b> A substitute <code>Date</code> or timestamp to be formatted (Default: <i>Now</i>)
+            </p>
+            
+            <section>
+              <h4><i>Unsupported Formatting</i></h4>
+              
+              <p><b>e</b> Timezone identifier.</p>
+              <p><b>T</b> Timezone abbreviation.</p>
+            </section>
+            
+            <section>
+              <h4><i>Supported Timestamp Range</i></h4>
+              
+              <p><code>0001-01-01 00:00:00.000</code> -- <code>9999-12-31 23:59:59:999</code></p>
+              <p><b>or</b> <code>-62,167,219,200,000</code> -- <code>253,402,300,799,999</code></p>
+            </section>
+          </section>
+        </details>
+      </section>
+      
+      <section>
+        <a class="nav" name="cogs.strftime"></a>
+        <h3><code>Cogs.strftime</code> (<code>strfutc</code>)</h3>
+        
+        <details>
+          <summary>Local and UTC Date/Time formatting based on the C/C++ function <a href="http://linux.die.net/man/3/strftime"><code>strftime</code></a>.</summary>
+          
+          <section>
+            <hgroup>
+              <h4>
+                <aside><code>String</code></aside>
+                <code>Cogs.strftime( format, [ time ] )</code>
+              </h4>
+              <h4>
+                <aside><code>String</code></aside>
+                <code>Cogs.strfutc( format, [ time ] )</code>
+              </h4>
+            </hgroup>
+            
+            <p>
+              <aside><code>String</code></aside>
+              <b>format</b> The guide for which the <b>time</b> should be formatted.
+            </p>
+            <p>
+              <aside><code>Date, Number</code></aside>
+              <b>time</b> A substitute <code>Date</code> or timestamp to be formatted (Default: <i>Now</i>)
+            </p>
+            
+            <section>
+              <h4><i>Unsupported Formatting</i></h4>
+              
+              <p><b>%E</b> Modifier.</p>
+              <p><b>%O</b> Modifier.</p>
+              <p><b>%Z</b> The time zone or name or abbreviation.</p>
+            </section>
+            
+            <section>
+              <h4><i>Supported Timestamp Range</i></h4>
+              
+              <p><code>0001-01-01 00:00:00.000</code> -- <code>9999-12-31 23:59:59:999</code></p>
+              <p><b>or</b> <code>-62,167,219,200,000</code> -- <code>253,402,300,799,999</code></p>
+            </section>
+          </section>
+        </details>
+      </section>
+      
+      <section>
+        <a class="nav" name="cogs.time"></a>
+        <h3><code>Cogs.time</code> (<code>utc</code>)</h3>
+        
+        <details>
+          <summary>The current time, in total milliseconds.</summary>
+          
+          <section>
+            <hgroup>
+              <h4>
+                <aside><code>Number</code></aside>
+                <code>Cogs.time()</code>
+              </h4>
+              <h4>
+                <aside><code>Number</code></aside>
+                <code>Cogs.utc()</code>
+              </h4>
+            </hgroup>
+          </section>
+        </details>
+        
+        <details>
+          <summary>Unassuming timestamp creation in local and UTC time.</summary>
+          
+          <section>
+            <hgroup>
+              <h4>
+                <aside><code>Number</code></aside>
+                <code>Cogs.time( year, month, day, hour, minute, second, milli )</code>
+              </h4>
+              <h4>
+                <aside><code>Number</code></aside>
+                <code>Cogs.utc( year, month, day, hour, minute, second, milli )</code>
+              </h4>
+            </hgroup>
+            
+            <p>
+              <aside><code>Number</code></aside>
+              <b>year</b> The full year, so <b>1</b> is <b>year 1</b>, not 2001. (Default: 0)
+            </p>
+            <p>
+              <aside><code>Number</code></aside>
+              <b>month</b> The month, from <b>1 - 12</b>. (Default: 1)
+            </p>
+            <p>
+              <aside><code>Number</code></aside>
+              <b>day</b> The day, from <b>1 - 31</b>. (Default: 1)
+            </p>
+            <p>
+              <aside><code>Number</code></aside>
+              <b>hour</b> The hours, from <b>0 - 23</b>. (Default: 0)
+            </p>
+            <p>
+              <aside><code>Number</code></aside>
+              <b>minute</b> The minutes, from <b>0 - 59</b>. (Default: 0)
+            </p>
+            <p>
+              <aside><code>Number</code></aside>
+              <b>second</b> The seconds, from <b>0 - 59</b>. (Default: 0)
+            </p>
+            <p>
+              <aside><code>Number</code></aside>
+              <b>milli</b> The milliseconds, from <b>0 - 999</b>. (Default: 0)
+            </p>
+          </section>
+        </details>
+      </section>
+    </section>
+    
+    <section>
+      <a class="nav" name="type"></a>
+      <h2>Type</h2>
+      
+      <section>
+        <a class="nav" name="cogs.is_a"></a>
+        <h3><code>Cogs.is_a</code></h3>
+        
+        <details>
+          <summary>Enhanced <code>instanceof</code> testing.</summary>
+          
+          <section>
+            <hgroup>
+              <h4>
+                <aside><code>Boolean</code></aside>
+                <code>Cogs.is_a( object, compare )</code>
+              </h4>
+            </hgroup>
+            
+            <p>
+              <aside><code>Object</code></aside>
+              <b>object</b> The object to be compared.
+            </p>
+            <p>
+              <aside><code>Function, String</code></aside>
+              <b>compare</b> The <b>type</b>, constructor, <code>null</code>, or <code>undefined</code> to compare to.
+            </p>
+            
+            <section>
+              <hgroup>
+                <h4><i>Special Camparison Values</i></h4>
+              </hgroup>
+              
+              <p>
+                <aside><code>String</code></aside>
+                <b>nil</b> Matches <code>null</code> or <code>undefined</code>.
+              </p>
+            </section>
+          </section>
+        </details>
+      </section>
+      
+      <section>
+        <a class="nav" name="cogs.isof"></a>
+        <h3><code>Cogs.isof</code></h3>
+        
+        <details>
+          <summary>Enhanced <code>instanceof</code> testing with multiple possible comparisons.</summary>
+          
+          <section>
+            <hgroup>
+              <h4>
+                <aside><code>Boolean</code></aside>
+                <code>Cogs.isof( object, compare, [ ... ] )</code>
+              </h4>
+            </hgroup>
+            
+            <p>
+              <aside><code>Object</code></aside>
+              <b>object</b> The object to be compared.
+            </p>
+            <p>
+              <aside><code>Function, String</code></aside>
+              <b>compare</b> The <b>type</b> or constructor to compare to.
+            </p>
+          </section>
+        </details>
+      </section>
+      
+      <section>
+        <a class="nav" name="cogs.type"></a>
+        <h3><code>Cogs.type</code></h3>
+        
+        <details>
+          <summary>Enhanced <code>typeof</code> testing.</summary>
+          
+          <section>
+            <hgroup>
+              <h4>
+                <aside><code>String</code></aside>
+                <code>Cogs.type( object )</code>
+              </h4>
+            </hgroup>
+            
+            <p>
+              <aside><code>Object</code></aside>
+              <b>object</b> The object to be compared.
+            </p>
+            
+            <section>
+              <hgroup>
+                <h4><i>Possible, Recognized Types</i></h4>
+              </hgroup>
+              
+              <p><b>undefined</b></p>
+              <p><b>null</b></p>
+              <p><b>array</b></p>
+              <p><b>boolean</b></p>
+              <p><b>date</b></p>
+              <p><b>error</b></p>
+              <p><b>function</b></p>
+              <p><b>number</b></p>
+              <p><b>object</b></p>
+              <p><b>regexp</b></p>
+              <p><b>string</b></p>
+              <p><i>unknown</i></p>
+            </section>
+          </section>
+        </details>
+      </section>
+    </section>
+    
+  </div>
+  
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+<script>
+  $(function () {
+    var last;
+    
+    function drawTOC() {
+      $('a.nav').each(function () {
+        var self = $(this),
+          point = self.attr('name'),
+          title = self.next(':header').html() || '',
+          method = (/^cogs\./i).test(point);
+        
+        if (last !== method) {
+          last = method;
+          
+          if (method)
+            $('<ul>').appendTo('nav ol:last');
+        }
+        
+        $(method ? 'nav ul:last' : 'nav ol:last').append(function () {
+          return $('<li><a></a></li>').
+            find('a').
+              attr('href', '#' + point).
+              html(title).
+            end();
+        });
+      });
+    };
+    
+    //drawTOC();
+  });
+</script>
+</body>
+</html>
