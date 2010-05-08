@@ -159,16 +159,16 @@ new function Cogs() {
       return pairs || PAIRS || {};
     }
     
-    Cogs.fn.query = function query(query, source) {
+    Cogs.fn.query = function query(name, source) {
       var pairs = preamble(source);
       
-      if (Cogs.is_a(pairs[query], 'nil'))
+      if (Cogs.is_a(pairs[name], 'nil'))
         return null;
       else
-        if (pairs[query].length > 1)
-          return [].concat(pairs[query]);
+        if (pairs[name].length > 1)
+          return [].concat(pairs[name]);
         else
-          return pairs[query][0];
+          return pairs[name][0];
     };
     
   })();
