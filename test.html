@@ -45,12 +45,8 @@
   });
   
   test('Expire', function () {
-    equals(document.cookie, document.cookie, 'Verify Cookies');
-    
     ok(!Cogs.cookie('foo', null, true), 'Expire: foo (options === true)');
     ok(!Cogs.cookie('bar', null, -1),   'Expire: bar (options === -1)');
-    
-    equals(document.cookie, document.cookie, 'Verify Cookies');
   });
   
   
