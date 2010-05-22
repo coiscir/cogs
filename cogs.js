@@ -311,43 +311,39 @@ new function Cogs() {
       firstMonday = january1stCurr.getTime() - (DAY * daysMondayCurr);
       
       // build preamble baseline values
-      with (base) {
-        
-        base.TIME = time;
-        base.IS_UTC = isUtc;
+      base.TIME = time;
+      base.IS_UTC = isUtc;
+    
+      base.DATE = isUtc ? date.getUTCDate() : date.getDate();
+      base.MONTH = isUtc ? date.getUTCMonth() : date.getMonth();
+      base.YEAR = isUtc ? date.getUTCFullYear() : date.getFullYear();
       
-        base.DATE = isUtc ? date.getUTCDate() : date.getDate();
-        base.MONTH = isUtc ? date.getUTCMonth() : date.getMonth();
-        base.YEAR = isUtc ? date.getUTCFullYear() : date.getFullYear();
-        
-        base.ORDINAL = ORDINALS[
-          (10 <= DATE && DATE <= 19) ? 0 : (DATE % 10)
-        ] || ORDINALS[0];
-        
-        base.IS_LEAP = !(YEAR % 4) && !!(YEAR % 100) || !(YEAR % 400);
-        base.DAYSOFMONTH = MONTHDAYS[IS_LEAP ? 1 : 0][MONTH];
-        
-        base.HOUR = isUtc ? date.getUTCHours() : date.getHours();
-        base.MINUTE = isUtc ? date.getUTCMinutes() : date.getMinutes();
-        base.SECOND = isUtc ? date.getUTCSeconds() : date.getSeconds();
-        base.MSEC = isUtc ? date.getUTCMilliseconds() : date.getMilliseconds();
-        
-        base.OFFSET = isUtc ? 0 : date.getTimezoneOffset();
-        base.IS_DST = isUtc ? false : OFFSET !== january1stCurr.getTimezoneOffset();
-        base.TIMEZONE = -1 * OFFSET;
-        
-        base.WEEKDAY = isUtc ? date.getUTCDay() : date.getDay();
-        
-        base.DAYOFYEAR = integer((TIME - january1stCurr.getTime()) / DAY) + 1;
-        
-        base.FIRST_SUNDAY = firstSunday;
-        base.FIRST_MONDAY = firstMonday;
-        
-        base.ISO_MONDAY_CURR = isoMondayCurr;
-        base.ISO_MONDAY_NEXT = isoMondayNext;
-        base.ISO_MONDAY_PREV = isoMondayPrev;
+      base.ORDINAL = ORDINALS[
+        (10 <= base.DATE && base.DATE <= 19) ? 0 : (base.DATE % 10)
+      ] || ORDINALS[0];
       
-      }
+      base.IS_LEAP = !(base.YEAR % 4) && !!(base.YEAR % 100) || !(base.YEAR % 400);
+      base.DAYSOFMONTH = MONTHDAYS[base.IS_LEAP ? 1 : 0][base.MONTH];
+      
+      base.HOUR = isUtc ? date.getUTCHours() : date.getHours();
+      base.MINUTE = isUtc ? date.getUTCMinutes() : date.getMinutes();
+      base.SECOND = isUtc ? date.getUTCSeconds() : date.getSeconds();
+      base.MSEC = isUtc ? date.getUTCMilliseconds() : date.getMilliseconds();
+      
+      base.OFFSET = isUtc ? 0 : date.getTimezoneOffset();
+      base.IS_DST = isUtc ? false : base.OFFSET !== january1stCurr.getTimezoneOffset();
+      base.TIMEZONE = -1 * base.OFFSET;
+      
+      base.WEEKDAY = isUtc ? date.getUTCDay() : date.getDay();
+      
+      base.DAYOFYEAR = integer((base.TIME - january1stCurr.getTime()) / DAY) + 1;
+      
+      base.FIRST_SUNDAY = firstSunday;
+      base.FIRST_MONDAY = firstMonday;
+      
+      base.ISO_MONDAY_CURR = isoMondayCurr;
+      base.ISO_MONDAY_NEXT = isoMondayNext;
+      base.ISO_MONDAY_PREV = isoMondayPrev;
       
       return base;
     }
@@ -356,90 +352,86 @@ new function Cogs() {
     /* strftime */
     
     function strf(format, base) {
-      with (base) {
-        
-        return format.replace(/%(.)/g, function (match, convert) {
-          switch (convert) {
-            case 'c': return '%a, %e %b %Y %H:%M:%S GMT' + (IS_UTC ? '' : '%z');
-            case 'D': return '%m/%d/%y';
-            case 'F': return '%Y-%m-%d';
-            case 'r': return '%I:%M:%S %p';
-            case 'R': return '%H:%M';
-            case 'T': return '%H:%M:%S';
-            case 'v': return '%e-%b-%Y';
-            case 'x': return '%Y-%m-%d';
-            case 'X': return '%H:%M:%S';
-            
-            /* unsupported
-            case 'E': ...;
-            case 'O': ...;
-            case 'Z': ...;
-            */
-            
-            default:  return match;
-          }
-        }).replace(/%(.)/g, function (match, convert) {
-          switch (convert) {
-            case '%': return '%';
-            case 'a': return WEEKDAYS[WEEKDAY].substr(0, 3);
-            case 'A': return WEEKDAYS[WEEKDAY];
-            case 'b': return MONTHS[MONTH].substr(0, 3);
-            case 'B': return MONTHS[MONTH];
-            case 'C': return justify(integer(YEAR / 100), 2, '0');
-            case 'd': return justify(DATE, 2, '0');
-            case 'e': return justify(DATE, 2, ' ');
-            case 'g': return justify((
-                        (TIME < ISO_MONDAY_CURR ? (YEAR - 1) :
-                          (TIME >= ISO_MONDAY_NEXT ? (YEAR + 1) : YEAR)
-                        )
-                      ) % 100, 2, '0');
-            case 'G': return justify((
-                        (TIME < ISO_MONDAY_CURR ? (YEAR - 1) :
-                          (TIME >= ISO_MONDAY_NEXT ? (YEAR + 1) : YEAR)
-                        )
-                      ), 4, '0');
-            case 'h': return MONTHS[MONTH].substr(0, 3);
-            case 'H': return justify(HOUR, 2, '0');
-            case 'I': return justify(tumble(HOUR % 12, 12, 1), 2, '0');
-            case 'j': return justify(DAYOFYEAR, 3, '0');
-            case 'k': return justify(HOUR, 2, ' ');
-            case 'l': return justify(tumble(HOUR % 12, 12, 1), 2, ' ');
-            case 'm': return justify(MONTH + 1, 2, '0');
-            case 'M': return justify(MINUTE, 2, '0');
-            case 'n': return '\n';
-            case 'N': return justify(MSEC, 3, '0');
-            case 'p': return MERIDIEM[HOUR < 12 ? 0 : 1];
-            case 'P': return MERIDIEM[HOUR < 12 ? 2 : 3];
-            case 's': return integer(TIME / 1000);
-            case 'S': return justify(SECOND, 2, '0');
-            case 't': return '\t';
-            case 'u': return tumble(WEEKDAY, 7, 1);
-            case 'U': return justify(integer((TIME - FIRST_SUNDAY) / (7 * DAY)), 2, '0');
-            case 'V': return justify((
+      return format.replace(/%(.)/g, function (match, convert) {
+        switch (convert) {
+          case 'c': return '%a, %e %b %Y %H:%M:%S GMT' + (base.IS_UTC ? '' : '%z');
+          case 'D': return '%m/%d/%y';
+          case 'F': return '%Y-%m-%d';
+          case 'r': return '%I:%M:%S %p';
+          case 'R': return '%H:%M';
+          case 'T': return '%H:%M:%S';
+          case 'v': return '%e-%b-%Y';
+          case 'x': return '%Y-%m-%d';
+          case 'X': return '%H:%M:%S';
+          
+          /* unsupported
+          case 'E': ...;
+          case 'O': ...;
+          case 'Z': ...;
+          */
+          
+          default:  return match;
+        }
+      }).replace(/%(.)/g, function (match, convert) {
+        switch (convert) {
+          case '%': return '%';
+          case 'a': return WEEKDAYS[base.WEEKDAY].substr(0, 3);
+          case 'A': return WEEKDAYS[base.WEEKDAY];
+          case 'b': return MONTHS[base.MONTH].substr(0, 3);
+          case 'B': return MONTHS[base.MONTH];
+          case 'C': return justify(integer(base.YEAR / 100), 2, '0');
+          case 'd': return justify(base.DATE, 2, '0');
+          case 'e': return justify(base.DATE, 2, ' ');
+          case 'g': return justify((
+                      (base.TIME < base.ISO_MONDAY_CURR ? (base.YEAR - 1) :
+                        (base.TIME >= base.ISO_MONDAY_NEXT ? (base.YEAR + 1) : base.YEAR)
+                      )
+                    ) % 100, 2, '0');
+          case 'G': return justify((
+                      (base.TIME < base.ISO_MONDAY_CURR ? (base.YEAR - 1) :
+                        (base.TIME >= base.ISO_MONDAY_NEXT ? (base.YEAR + 1) : base.YEAR)
+                      )
+                    ), 4, '0');
+          case 'h': return MONTHS[base.MONTH].substr(0, 3);
+          case 'H': return justify(base.HOUR, 2, '0');
+          case 'I': return justify(tumble(base.HOUR % 12, 12, 1), 2, '0');
+          case 'j': return justify(base.DAYOFYEAR, 3, '0');
+          case 'k': return justify(base.HOUR, 2, ' ');
+          case 'l': return justify(tumble(base.HOUR % 12, 12, 1), 2, ' ');
+          case 'm': return justify(base.MONTH + 1, 2, '0');
+          case 'M': return justify(base.MINUTE, 2, '0');
+          case 'n': return '\n';
+          case 'N': return justify(base.MSEC, 3, '0');
+          case 'p': return MERIDIEM[base.HOUR < 12 ? 0 : 1];
+          case 'P': return MERIDIEM[base.HOUR < 12 ? 2 : 3];
+          case 's': return integer(base.TIME / 1000);
+          case 'S': return justify(base.SECOND, 2, '0');
+          case 't': return '\t';
+          case 'u': return tumble(base.WEEKDAY, 7, 1);
+          case 'U': return justify(integer((base.TIME - base.FIRST_SUNDAY) / (7 * DAY)), 2, '0');
+          case 'V': return justify((
+                      integer((
+                        integer(base.TIME / DAY) -
+                        tumble(base.WEEKDAY, 7) -
                         integer((
-                          integer(TIME / DAY) -
-                          tumble(WEEKDAY, 7) -
-                          integer((
-                            (TIME >= ISO_MONDAY_NEXT ? ISO_MONDAY_NEXT :
-                              (TIME >= ISO_MONDAY_CURR ? ISO_MONDAY_CURR : ISO_MONDAY_PREV)
-                            )
-                          ) / DAY)
-                        ) / 7) + 1
-                      ), 2, '0');
-            case 'w': return WEEKDAY;
-            case 'W': return justify(integer((TIME - FIRST_MONDAY) / (7 * DAY)), 2, '0');
-            case 'y': return justify((YEAR % 100), 2, '0');
-            case 'Y': return justify(YEAR, 4, '0');
-            case 'z': return (
-                        (TIMEZONE < 0 ? '-' : '+') +
-                        justify(Math.abs(integer(TIMEZONE / 60)), 2, '0') +
-                        justify(Math.abs(TIMEZONE % 60), 2, '0')
-                      );
-            default:  return match;
-          }
-        });
-        
-      }
+                          (base.TIME >= base.ISO_MONDAY_NEXT ? base.ISO_MONDAY_NEXT :
+                            (base.TIME >= base.ISO_MONDAY_CURR ? base.ISO_MONDAY_CURR : base.ISO_MONDAY_PREV)
+                          )
+                        ) / DAY)
+                      ) / 7) + 1
+                    ), 2, '0');
+          case 'w': return base.WEEKDAY;
+          case 'W': return justify(integer((base.TIME - base.FIRST_MONDAY) / (7 * DAY)), 2, '0');
+          case 'y': return justify((base.YEAR % 100), 2, '0');
+          case 'Y': return justify(base.YEAR, 4, '0');
+          case 'z': return (
+                      (base.TIMEZONE < 0 ? '-' : '+') +
+                      justify(Math.abs(integer(base.TIMEZONE / 60)), 2, '0') +
+                      justify(Math.abs(base.TIMEZONE % 60), 2, '0')
+                    );
+          default:  return match;
+        }
+      });
     }
     
     Cogs.fn.strftime = function strftime(format, time) {
@@ -453,97 +445,93 @@ new function Cogs() {
     /* PHP's date() */
     
     function phpf(format, base) {
-      with (base) {
+      return format.replace(/(\\)?(.)/g, function (match, option, convert) {
+        if (option === '\\') return match;
         
-        return format.replace(/(\\)?(.)/g, function (match, option, convert) {
-          if (option === '\\') return match;
+        switch (convert) {
+          case 'c': return 'Y-m-d\\TH:i:sP';
+          case 'r': return 'D, d M Y H:i:s O';
           
-          switch (convert) {
-            case 'c': return 'Y-m-d\\TH:i:sP';
-            case 'r': return 'D, d M Y H:i:s O';
-            
-            /* unsupported */
-            case 'e': return '';
-            case 'T': return '';
-            
-            default:  return match;
-          }
-        }).replace(/(\\)?(.)/g, function (match, option, convert) {
-          if (option === '\\') return convert;
+          /* unsupported */
+          case 'e': return '';
+          case 'T': return '';
           
-          var colon = true; // +HHMM or +HH:MM
-          
-          switch (convert) {
-          // Day
-            case 'd': return justify(DATE, 2, '0');
-            case 'D': return WEEKDAYS[WEEKDAY].substr(0, 3);
-            case 'j': return DATE;
-            case 'l': return WEEKDAYS[WEEKDAY];
-            case 'N': return tumble(WEEKDAY, 7, 1);
-            case 'S': return ORDINAL;
-            case 'w': return WEEKDAY;
-            case 'z': return DAYOFYEAR;
-          // Week
-            case 'W': return justify((
-                        integer((
-                          integer(TIME / DAY) -
-                          tumble(WEEKDAY, 7) -
-                          integer((
-                            (TIME >= ISO_MONDAY_NEXT ? ISO_MONDAY_NEXT :
-                              (TIME >= ISO_MONDAY_CURR ? ISO_MONDAY_CURR : ISO_MONDAY_PREV)
-                            )
-                          ) / DAY)
-                        ) / 7) + 1
-                      ), 2, '0');
-          // Month
-            case 'F': return MONTHS[MONTH];
-            case 'm': return justify(MONTH + 1, 2, '0');
-            case 'M': return MONTHS[MONTH].substr(0, 3);
-            case 'n': return MONTH + 1;
-            case 't': return DAYSOFMONTH;
-          // Year
-            case 'L': return IS_LEAP ? 1 : 0;
-            case 'o': return justify((
-                        (TIME < ISO_MONDAY_CURR ? (YEAR - 1) :
-                          (TIME >= ISO_MONDAY_NEXT ? (YEAR + 1) : YEAR)
-                        )
-                      ), 4, '0');
-            case 'Y': return justify(YEAR, 4, '0');
-            case 'y': return justify(YEAR % 100, 2, '0');
-          // Time
-            case 'a': return MERIDIEM[HOUR < 12 ? 2 : 3];
-            case 'A': return MERIDIEM[HOUR < 12 ? 0 : 1];
-            case 'B': return (((
-                        integer((
-                          (HOUR * 3600) + (MINUTE * 60) + SECOND +
-                          ((OFFSET + 60) * 60)
-                        ) / SWB)
-                      ) + 1000) % 1000, 3, '0');
-            case 'g': return tumble(HOUR % 12, 12, 1);
-            case 'G': return HOUR;
-            case 'h': return justify(tumble(HOUR % 12, 12, 1), 2, '0');
-            case 'H': return justify(HOUR, 2, '0');
-            case 'i': return justify(MINUTE, 2, '0');
-            case 's': return justify(SECOND, 2, '0');
-            case 'u': return justify(MSEC * 1000, 6, '0');
-          // Timezone
-            case 'I': return IS_DST ? 1 : 0;
-            case 'O': colon = false; /* continue */
-            case 'P': return (
-                        (TIMEZONE < 0 ? '-' : '+') +
-                        justify(Math.abs(integer(TIMEZONE / 60)), 2, '0') +
-                        (colon ? ':' : '') +
-                        justify(Math.abs(TIMEZONE % 60), 2, '0')
-                      );
-            case 'Z': return TIMEZONE * 60;
-          // Full Date/Time
-            case 'U': return integer(TIME / 1000);
-            
-            default:  return convert;
-          }
-        });
+          default:  return match;
+        }
+      }).replace(/(\\)?(.)/g, function (match, option, convert) {
+        if (option === '\\') return convert;
         
-      }
+        var colon = true; // +HHMM or +HH:MM
+        
+        switch (convert) {
+        // Day
+          case 'd': return justify(base.DATE, 2, '0');
+          case 'D': return WEEKDAYS[base.WEEKDAY].substr(0, 3);
+          case 'j': return base.DATE;
+          case 'l': return WEEKDAYS[base.WEEKDAY];
+          case 'N': return tumble(base.WEEKDAY, 7, 1);
+          case 'S': return base.ORDINAL;
+          case 'w': return base.WEEKDAY;
+          case 'z': return base.DAYOFYEAR;
+        // Week
+          case 'W': return justify((
+                      integer((
+                        integer(base.TIME / DAY) -
+                        tumble(base.WEEKDAY, 7) -
+                        integer((
+                          (base.TIME >= base.ISO_MONDAY_NEXT ? base.ISO_MONDAY_NEXT :
+                            (base.TIME >= base.ISO_MONDAY_CURR ? base.ISO_MONDAY_CURR : base.ISO_MONDAY_PREV)
+                          )
+                        ) / DAY)
+                      ) / 7) + 1
+                    ), 2, '0');
+        // Month
+          case 'F': return MONTHS[base.MONTH];
+          case 'm': return justify(base.MONTH + 1, 2, '0');
+          case 'M': return MONTHS[base.MONTH].substr(0, 3);
+          case 'n': return base.MONTH + 1;
+          case 't': return base.DAYSOFMONTH;
+        // Year
+          case 'L': return base.IS_LEAP ? 1 : 0;
+          case 'o': return justify((
+                      (base.TIME < base.ISO_MONDAY_CURR ? (base.YEAR - 1) :
+                        (base.TIME >= base.ISO_MONDAY_NEXT ? (base.YEAR + 1) : base.YEAR)
+                      )
+                    ), 4, '0');
+          case 'Y': return justify(base.YEAR, 4, '0');
+          case 'y': return justify(base.YEAR % 100, 2, '0');
+        // Time
+          case 'a': return MERIDIEM[base.HOUR < 12 ? 2 : 3];
+          case 'A': return MERIDIEM[base.HOUR < 12 ? 0 : 1];
+          case 'B': return (((
+                      integer((
+                        (base.HOUR * 3600) + (base.MINUTE * 60) + base.SECOND +
+                        ((base.OFFSET + 60) * 60)
+                      ) / SWB)
+                    ) + 1000) % 1000, 3, '0');
+          case 'g': return tumble(base.HOUR % 12, 12, 1);
+          case 'G': return base.HOUR;
+          case 'h': return justify(tumble(base.HOUR % 12, 12, 1), 2, '0');
+          case 'H': return justify(base.HOUR, 2, '0');
+          case 'i': return justify(base.MINUTE, 2, '0');
+          case 's': return justify(base.SECOND, 2, '0');
+          case 'u': return justify(base.MSEC * 1000, 6, '0');
+        // Timezone
+          case 'I': return base.IS_DST ? 1 : 0;
+          case 'O': colon = false; /* continue */
+          case 'P': return (
+                      (base.TIMEZONE < 0 ? '-' : '+') +
+                      justify(Math.abs(integer(base.TIMEZONE / 60)), 2, '0') +
+                      (colon ? ':' : '') +
+                      justify(Math.abs(base.TIMEZONE % 60), 2, '0')
+                    );
+          case 'Z': return base.TIMEZONE * 60;
+        // Full Date/Time
+          case 'U': return integer(base.TIME / 1000);
+          
+          default:  return convert;
+        }
+      });
     };
     
     Cogs.fn.phpdate = function phpdate(format, time) {
