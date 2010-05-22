@@ -263,7 +263,7 @@ new function Cogs() {
       var base = {}, date,
         january1stCurr, january1stNext, january1stPrev, // January 1st, Midnight
         daysSundayCurr, daysSundayNext, daysSundayPrev, // January 1st, Day of Sunday Week
-        daysMondayCurr, daysMondayCurr, daysMondayPrev, // January 1st, Day of Monday Week
+        daysMondayCurr, daysMondayNext, daysMondayPrev, // January 1st, Day of Monday Week
         isoMondayCurr, isoMondayNext, isoMondayPrev,    // First Monday of ISO-8601 Year
         firstSunday, firstMonday;                       // Week Starts before January 1st
       
